@@ -30,13 +30,15 @@ function parseData() {
 
 function addCard(cards, label) {
   const id = uuid.v4();
-
-  cards[id] = {
-    id,
-    label,
-    offset: {
-      x: 0,
-      y: 0,
+  return {
+    ...cards,
+    [id]: {
+      id,
+      label,
+      offset: {
+        x: 0,
+        y: 0,
+      },
     },
   };
 }
@@ -48,6 +50,7 @@ function App() {
   const boardRef = useRef(null);
   const boardSize = useComponentSize(boardRef);
   const { height, width } = boardSize;
+
   const showDialog = useCallback(() => setIsAddOpen(true), []);
 
   useEffect(() => {
@@ -59,8 +62,9 @@ function App() {
   }, [height, width]);
 
   function handleDelete(card) {
-    delete cards[card.id];
-    setCards({ ...cards });
+    const clonedCards = { ...cards };
+    delete clonedCards[card.id];
+    setCards(clonedCards);
   }
 
   const cardEls = Object.values(cards).map((card) => (
